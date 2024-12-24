@@ -11,7 +11,6 @@ password = '' ## Mot de passe CAS
 telegram_bot_token = "" ## Token de BOT Télégram
 chat_id = '' ## Chat à ID à récupérer via l'API (https://api.telegram.org/bot[telegram_bot_token]/getUpdates)
 
-
 #Aucune protection anti-bot merci l'univ <3
 
 #Récupère le JSON de webnotes en se connectant au CAS de l'univ (récupération du cookie de session)
@@ -89,10 +88,18 @@ async def main():
     with open("data.json", "w"):
         pass
     while True:
-        await notification(compare_data(sort_data(get_data(username, password))))
+        try:
+            await notification(compare_data(sort_data(get_data(username, password))))
+        except Exception as e:
+            print(f"Erreur lors de l'envoi de la notification : {e}")
         print(x)
         x += 1
         time.sleep(120)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    while True:
+        try:
+            asyncio.run(main())
+        except Exception as e:
+            print(f"Erreur dans le script principal : {e}")
+            time.sleep(10)  # Attendre 10 secondes avant de redémarrer
